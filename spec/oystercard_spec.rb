@@ -2,6 +2,9 @@ require 'oystercard'
 RSpec.describe Oystercard do
   let(:station1) { double :station }
   let(:station2) { double :station }
+  it 'initializes an empty hash' do
+    expect(subject.journeys).to eq({})
+  end
   describe '#top_up' do
     it 'tops up the balance' do
       expect { subject.top_up(1) }.to change { subject.balance }.by(1)
@@ -31,6 +34,12 @@ RSpec.describe Oystercard do
     end
   end
   describe '#touch_out' do
+    it 'stores journey in hash' do
+      subject.top_up(10)
+      subject.touch_in(station1)
+      subject.touch_out(station2)
+      expect(subject.journeys).to eq({ station1 => station2 })
+    end
     it 'records station at end of journey' do
       subject.top_up(10)
       subject.touch_in(station1)
