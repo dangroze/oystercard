@@ -13,12 +13,16 @@ class Oystercard
 
   def top_up(amount)
     maximum_balance = MAXIMUM_BALANCE
-    raise "Maximum balance of #{maximum_balance} reached!" if amount + @balance > MAXIMUM_BALANCE
+    if amount + @balance > MAXIMUM_BALANCE
+      raise "Maximum balance of #{maximum_balance} reached!"
+    end
+
     @balance += amount
   end
 
   def touch_in
     raise "Insufficient funds!" if balance < MINIMUM_BALANCE
+    
     @in_use = true
   end
 

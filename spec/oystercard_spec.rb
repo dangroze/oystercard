@@ -2,7 +2,7 @@ require 'oystercard'
 RSpec.describe Oystercard do
   describe '#top_up' do
     it 'tops up the balance' do
-      expect { subject.top_up(1)}.to change{ subject.balance }.by(1)
+      expect { subject.top_up(1) }.to change { subject.balance }.by(1)
     end
     it 'reaches maximum balance' do
       maximum_balance = Oystercard::MAXIMUM_BALANCE
@@ -25,11 +25,11 @@ RSpec.describe Oystercard do
   end
   describe '#touch_out' do
     it 'touches_out' do
-    subject.top_up(10)
-    subject.touch_in
-    subject.touch_out
-    expect(subject).not_to be_in_journey
-  end
+      subject.top_up(10)
+      subject.touch_in
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
     it 'charges on touch_out' do
       minimum_fare = Oystercard::MINIMUM_FARE
       subject.top_up(10)
