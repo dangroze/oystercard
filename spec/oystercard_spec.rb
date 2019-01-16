@@ -38,9 +38,9 @@ RSpec.describe Oystercard do
       subject.top_up(10)
       subject.touch_in(station1)
       subject.touch_out(station2)
-      expect(subject.journeys).to eq({ station1 => station2 })
+      expect(subject.journeys).to include(station1 => station2)
     end
-    it 'records station at end of journey' do
+    it 'records exit station' do
       subject.top_up(10)
       subject.touch_in(station1)
       subject.touch_out(station2)
