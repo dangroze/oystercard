@@ -2,15 +2,15 @@ require 'oystercard'
 RSpec.describe Oystercard do
   let(:station1) { double :station }
   let(:station2) { double :station }
-  it 'initializes an empty hash' do
-    expect(subject.journeys).to eq({})
+  it 'initializes an empty array' do
+    expect(subject.journeys).to eq []
   end
   describe '#top_up' do
     it 'tops up the balance' do
       expect { subject.top_up(1) }.to change { subject.balance }.by(1)
     end
     it 'reaches maximum balance' do
-      maximum_balance = Oystercard::MAXIMUM_BALANCE
+      maximum_balance = Oystercard::MAX_BALANCE
       subject.top_up(maximum_balance)
       expect { subject.top_up(1) }.to raise_error "Maximum balance of #{maximum_balance} reached!"
     end
@@ -19,44 +19,50 @@ RSpec.describe Oystercard do
     expect(subject).not_to be_in_journey
   end
   describe '#touch_in' do
+    it 'raises error when there are insufficient funds' do
+      expect { subject.touch_in(station1) }.to raise_error "Insufficient funds!"
+    end
     it 'records the station' do
       subject.top_up(10)
       subject.touch_in(station1)
       expect(subject.entry_station).to eq station1
     end
-    it 'touches_in' do
-      subject.top_up(10)
-      subject.touch_in(station1)
-      expect(subject).to be_in_journey
-    end
-    it 'raises error when there are insufficient funds' do
-      expect { subject.touch_in(station1) }.to raise_error "Insufficient funds!"
-    end
   end
   describe '#touch_out' do
-    it 'stores journey in hash' do
-      subject.top_up(10)
-      subject.touch_in(station1)
-      subject.touch_out(station2)
-      expect(subject.journeys).to include(station1 => station2)
-    end
-    it 'records exit station' do
-      subject.top_up(10)
-      subject.touch_in(station1)
-      subject.touch_out(station2)
-      expect(subject.exit_station).to eq station2
-    end
-    it 'touches_out' do
-      subject.top_up(10)
-      subject.touch_in(station1)
-      subject.touch_out(station2)
-      expect(subject).not_to be_in_journey
-    end
     it 'charges on touch_out' do
-      minimum_fare = Oystercard::MINIMUM_FARE
+      minimum_fare = Oystercard::MIN_FARE
       subject.top_up(10)
       subject.touch_in(station1)
       expect { subject.touch_out(station2) }.to change { subject.balance }.by(-minimum_fare)
     end
+    it "forgets the entry station" do
+      subject.top_up(10)
+      subject.touch_in(station1)
+      subject.touch_out(station2)
+      expect(subject.entry_station).to be_nil
+    end
   end
+  describe "#journey_log" do
+  it "has no journeys by default" do
+    expect(subject.journeys).to be_empty
+  end
+  it "has the entry station" do
+    subject.top_up(10)
+    subject.touch_in(station1)
+    subject.touch_out(station2)
+    expect(subject.journeys[0][:entry_station]).to eq(station1)
+  end
+  it "has the exit station" do
+    subject.top_up(10)
+    subject.touch_in(station1)
+    subject.touch_out(station2)
+    expect(subject.journeys[0][:exit_station]).to eq(station2)
+  end
+  it "stores entry & exit stations as one journey" do
+    subject.top_up(10)
+    subject.touch_in(station1)
+    subject.touch_out(station2)
+    expect(subject.journeys[0]).to include(:entry_station, :exit_station)
+  end
+end
 end

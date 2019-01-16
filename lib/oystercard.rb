@@ -1,41 +1,48 @@
+require_relative 'station'
+
 class Oystercard
-  attr_reader :balance, :entry_station, :exit_station, :journeys
+  attr_reader :balance, :entry_station, :journeys
 
-  MAXIMUM_BALANCE = 90
-  MINIMUM_BALANCE = 1
-  MINIMUM_FARE = 2
+  DEFAULT_BALANCE = 0
+  MAX_BALANCE = 90
+  MIN_BALANCE = 1
+  MIN_FARE = 2
 
-  def initialize
-    @balance = 0
-    @journeys = {}
+  def initialize(balance = DEFAULT_BALANCE)
+    @balance = balance
+    @journeys = []
   end
 
   def top_up(amount)
-    maximum_balance = MAXIMUM_BALANCE
-    if amount + @balance > MAXIMUM_BALANCE
-      raise "Maximum balance of #{maximum_balance} reached!"
+    if amount + @balance > MAX_BALANCE
+      raise "Maximum balance of #{MAX_BALANCE} reached!"
     end
 
     @balance += amount
   end
 
-  def touch_in(station)
-    raise "Insufficient funds!" if balance < MINIMUM_BALANCE
+  def touch_in(entry_station)
+    raise "Insufficient funds!" if balance < MIN_BALANCE
 
-    @entry_station = station
-    @exit_station = nil
+    @entry_station = entry_station
   end
 
-  def touch_out(station)
-    @exit_station = station
-    @journeys[@entry_station] = @exit_station
+  def touch_out(exit_station)
+    journey_log(@entry_station, exit_station)
     @entry_station = nil
+    deduct(MIN_FARE)
+  end
 
-    deduct(MINIMUM_FARE)
+  def journey_log(entry_station, exit_station)
+    journey = {
+      entry_station: entry_station,
+      exit_station: exit_station
+    }
+    @journeys << journey
   end
 
   def in_journey?
-    !@entry_station.nil? && @exit_station.nil?
+    !@entry_station.nil?
   end
 
   private
@@ -44,7 +51,3 @@ class Oystercard
     @balance -= amount
   end
 end
-# hash = {
-#   1 => [entry_station1,exit_station1],
-#   entry_station2 => exit_station2
-# }
