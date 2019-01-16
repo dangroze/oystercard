@@ -1,6 +1,7 @@
 require 'oystercard'
 RSpec.describe Oystercard do
-  let(:station) { double :station }
+  let(:station1) { double :station }
+  let(:station2) { double :station }
   describe '#top_up' do
     it 'tops up the balance' do
       expect { subject.top_up(1) }.to change { subject.balance }.by(1)
@@ -17,30 +18,36 @@ RSpec.describe Oystercard do
   describe '#touch_in' do
     it 'records the station' do
       subject.top_up(10)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq station
+      subject.touch_in(station1)
+      expect(subject.entry_station).to eq station1
     end
     it 'touches_in' do
       subject.top_up(10)
-      subject.touch_in(station)
+      subject.touch_in(station1)
       expect(subject).to be_in_journey
     end
     it 'raises error when there are insufficient funds' do
-      expect { subject.touch_in(station) }.to raise_error "Insufficient funds!"
+      expect { subject.touch_in(station1) }.to raise_error "Insufficient funds!"
     end
   end
   describe '#touch_out' do
+    it 'records station at end of journey' do
+      subject.top_up(10)
+      subject.touch_in(station1)
+      subject.touch_out(station2)
+      expect(subject.exit_station).to eq station2
+    end
     it 'touches_out' do
       subject.top_up(10)
-      subject.touch_in(station)
-      subject.touch_out
+      subject.touch_in(station1)
+      subject.touch_out(station2)
       expect(subject).not_to be_in_journey
     end
     it 'charges on touch_out' do
       minimum_fare = Oystercard::MINIMUM_FARE
       subject.top_up(10)
-      subject.touch_in(station)
-      expect { subject.touch_out }.to change { subject.balance }.by(-minimum_fare)
+      subject.touch_in(station1)
+      expect { subject.touch_out(station2) }.to change { subject.balance }.by(-minimum_fare)
     end
   end
 end
