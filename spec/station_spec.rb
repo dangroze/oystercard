@@ -1,6 +1,6 @@
 require 'station'
 
-describe Station do
+RSpec.describe Station do
 
   subject(:station) { described_class.new("station", 1) }
 
