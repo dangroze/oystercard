@@ -22,7 +22,7 @@ RSpec.describe Journey do
   end
   describe '#add_to_journey_list' do
     it 'adds the journey to the list' do
-      expect(subject.journey_list).to include(subject.journey_h)
+      expect(subject.add_to_journey_list).to include(subject.journey_h)
     end
   end
 end
