@@ -20,4 +20,9 @@ RSpec.describe Journey do
       expect(subject.journey_h[:exit]).to eq(@exit_station.name)
     end
   end
+  describe '#add_to_journey_list' do
+    it 'adds the journey to the list' do
+      expect(subject.journey_list).to include(subject.journey_h)
+    end
+  end
 end
