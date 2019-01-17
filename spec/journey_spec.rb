@@ -14,4 +14,10 @@ RSpec.describe Journey do
       expect(subject.journey_h[:entry]).to eq(@entry_station.name)
     end
   end
+  describe '#add_exit_station' do
+    it 'adds an exit station to the hash' do
+      subject.add_exit_station(@exit_station)
+      expect(subject.journey_h[:exit]).to eq(@exit_station.name)
+    end
+  end
 end
