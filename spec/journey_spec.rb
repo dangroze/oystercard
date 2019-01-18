@@ -25,4 +25,12 @@ RSpec.describe Journey do
       expect(subject.add_to_journey_list).to include(subject.journey_h)
     end
   end
+  describe '#complete?' do
+    it 'checks if a journey is complete' do
+      subject.add_entry_station(@entry_station)
+      subject.add_exit_station(@exit_station)
+      expect(subject).to be_complete
+    end
+  end
+
 end

@@ -1,4 +1,5 @@
 require_relative 'station'
+require_relative 'journey.rb'
 
 class Journey
   attr_reader :journey_h, :journeys
@@ -19,5 +20,10 @@ class Journey
   def add_to_journey_list
     @journeys << @journey_h
   end
+
+  def complete?
+    !@journey_h.nil?
+  end
+
 
 end

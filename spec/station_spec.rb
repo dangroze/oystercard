@@ -2,7 +2,7 @@ require 'station'
 
 RSpec.describe Station do
 
-  subject(:station) { described_class.new("station", 1) }
+  subject(:station) { described_class.new("station" ,1) }
 
   it "has a name" do
     expect(subject.name).to eq("station")
