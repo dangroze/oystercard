@@ -25,7 +25,7 @@ class Journey
   end
 
   def complete?
-    !@journey_h.nil?
+    @journey_h[:entry] && @journey_h[:exit]
   end
 
   def fare

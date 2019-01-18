@@ -37,7 +37,12 @@ RSpec.describe Journey do
       subject.add_entry_station(@entry_station)
       subject.add_exit_station(@exit_station)
       expect(subject.fare).to eq Journey::MIN_FARE
-    end    
+    end
+    it 'returns a penalty fare if not touched_in' do
+      subject.add_exit_station(@exit_station)
+      expect(subject.fare).to eq Journey::PENALTY_FARE
+    end
+
   end
 
 end
