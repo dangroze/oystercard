@@ -4,6 +4,9 @@ require_relative 'journey.rb'
 class Journey
   attr_reader :journey_h, :journeys
 
+  MIN_FARE = 1
+  PENALTY_FARE = 6
+
   def initialize
     @journey_h = {}
     @journeys = []
@@ -25,5 +28,8 @@ class Journey
     !@journey_h.nil?
   end
 
+  def fare
+    complete? ? MIN_FARE : PENALTY_FARE
+  end
 
 end

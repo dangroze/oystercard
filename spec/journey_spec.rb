@@ -32,5 +32,12 @@ RSpec.describe Journey do
       expect(subject).to be_complete
     end
   end
+  describe '#fare' do
+    it 'returns the minimum fare' do
+      subject.add_entry_station(@entry_station)
+      subject.add_exit_station(@exit_station)
+      expect(subject.fare).to eq Journey::MIN_FARE
+    end    
+  end
 
 end
