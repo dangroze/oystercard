@@ -1,31 +1,31 @@
 require_relative 'station'
-require_relative 'journey.rb'
+require_relative 'journey'
 
 class Journey
-  attr_reader :journey_h, :journeys
+  attr_reader :journey, :journey_list
 
   MIN_FARE = 1
   PENALTY_FARE = 6
 
   def initialize
-    @journey_h = {}
-    @journeys = []
+    @journey = {}
+    @journey_list = []
   end
 
   def add_entry_station(entry_station)
-    @journey_h[:entry] = entry_station.name
+    @journey[:entry] = entry_station
   end
 
   def add_exit_station(exit_station)
-    @journey_h[:exit] = exit_station.name
+    @journey[:exit] = exit_station
   end
 
   def add_to_journey_list
-    @journeys << @journey_h
+    @journey_list << @journey
   end
 
   def complete?
-    @journey_h[:entry] && @journey_h[:exit]
+    !!@journey[:entry] && !!@journey[:exit]
   end
 
   def fare
